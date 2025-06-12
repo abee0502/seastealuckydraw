@@ -34,7 +34,7 @@ st.markdown(f"""
 
 # ─── User Controls & Forced Winners ────────────────
 num_winners = st.sidebar.slider("Number of winners", 1, min(50, len(participants)), 50)
-forced = ["nininininini2212", "christinachoo223"]
+forced = ["@nininininini2212", "@christinachoo223"]
 
 # Sanity checks
 missing = [w for w in forced if w not in participants]
