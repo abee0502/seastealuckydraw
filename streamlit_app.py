@@ -37,37 +37,52 @@ num_winners = st.sidebar.slider(
     "Number of winners", 1, min(50, len(participants)), 50
 )
 
+# ─── Forced winners ────────────────────────────────
+forced = ["nininininini2212", "christinachoo223"]
+missing = [w for w in forced if w not in participants]
+if missing:
+    st.error(f"The following forced winners are not in your list: {', '.join(missing)}")
+    st.stop()
+elif num_winners < len(forced):
+    st.error(f"You must pick at least {len(forced)} winners to include the forced entries.")
+    st.stop()
+
 # ─── Draw Logic ───────────────────────────────────
-if participants and st.button("🎰 Start the Lucky Draw!"):
+if st.button("🎰 Start the Lucky Draw!"):
     available = participants.copy()
     st.session_state.winners = []
+
+    # 1) Pre-assign the forced winners
+    for w in forced:
+        st.session_state.winners.append(w)
+        available.remove(w)
+
+    # placeholders for live updates
     current_draw = st.empty()
     winners_list = st.empty()
 
-    for i in range(num_winners):
-        if not available:
-            st.warning("⚠️ Not enough participants!")
-            break
-
-        # Optional spin animation
-        for _ in range(10):
+    # 2) Draw the remaining slots
+    to_draw = num_winners - len(forced)
+    for i in range(to_draw):
+        # quick “spin” (shorter & fewer steps)
+        for _ in range(5):
             candidate = random.choice(available)
             current_draw.markdown(f"🎲 Drawing: **{candidate}**")
-            time.sleep(0.1)
+            time.sleep(0.05)
 
-        # Final pick
         winner = random.choice(available)
         available.remove(winner)
         st.session_state.winners.append(winner)
 
-        # Update displays
-        current_draw.markdown(f"🎉 Winner {i+1}: **{winner}**")
+        # update UI
+        current_draw.markdown(f"🎉 Winner {len(st.session_state.winners)}: **{winner}**")
         winners_list.markdown("\n\n".join(
             f"{idx+1}. **{name}**"
             for idx, name in enumerate(st.session_state.winners)
         ))
 
-        time.sleep(2)
+        # pause only half a second
+        time.sleep(0.5)
 
     current_draw.empty()
     st.balloons()
