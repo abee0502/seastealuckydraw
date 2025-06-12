@@ -38,7 +38,7 @@ num_winners = st.sidebar.slider(
 )
 
 # ─── Forced winners ────────────────────────────────
-forced = ["nininininini2212", "christinachoo223"]
+forced = ["@nininininini2212", "@christinachoo223"]
 missing = [w for w in forced if w not in participants]
 if missing:
     st.error(f"The following forced winners are not in your list: {', '.join(missing)}")
